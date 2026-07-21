@@ -19,6 +19,8 @@ import android.webkit.WebViewClient;
 import androidx.annotation.RequiresApi;
 import androidx.browser.customtabs.CustomTabsIntent;
 
+import org.medicmobile.webapp.mobile.cf_sdk.CfSdkHelper;
+
 public class UrlHandler extends WebViewClient {
 	EmbeddedBrowserActivity parentActivity;
 	SettingsStore settings;
@@ -149,6 +151,7 @@ public class UrlHandler extends WebViewClient {
 	@Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		boolean isMigrationRunning = this.parentActivity.isMigrationRunning();
 		trace(this, "onPageStarted() :: url: %s, isMigrationRunning: %s", url, isMigrationRunning);
+		CfSdkHelper.startWebInstrumentationPage(view, this.settings.getAppUrl(), url);
 
 		if (isMigrationRunning && url.contains("/login")) {
 			this.parentActivity.setMigrationRunning(false);
@@ -165,6 +168,7 @@ public class UrlHandler extends WebViewClient {
 
 	@Override public void onPageFinished(WebView view, String url) {
 		trace(this, "onPageFinished() :: url: %s", url);
+		CfSdkHelper.injectWebInstrumentation(view, this.settings.getAppUrl(), url);
 		// Broadcast the event so if the connection error
 		// activity is listening it will close
 		Intent intent = new Intent("onPageFinished");

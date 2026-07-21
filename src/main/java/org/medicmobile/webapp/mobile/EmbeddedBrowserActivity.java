@@ -38,6 +38,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
+import org.medicmobile.webapp.mobile.cf_sdk.CfSdkHelper;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -173,6 +175,18 @@ public class EmbeddedBrowserActivity extends Activity {
 		}
 
 		super.onStart();
+	}
+
+	@Override
+	protected void onResume() {
+		CfSdkHelper.logAppOpen();
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		CfSdkHelper.logAppClose();
+		super.onPause();
 	}
 
 	@Override
@@ -407,6 +421,7 @@ public class EmbeddedBrowserActivity extends Activity {
 		maj.setConnectivityManager((ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE));
 
 		container.addJavascriptInterface(maj, "medicmobile_android");
+		CfSdkHelper.initWebViewInstrumentation(container);
 	}
 
 	private void enableStorage(WebView container) {
