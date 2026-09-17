@@ -144,7 +144,7 @@ public class MyApplication extends Application implements LifecycleEventObserver
             CfSdkHelper.prepareWebInstrumentation(this);
         }
 
-        CoreConstants.INSTANCE.setApiBaseUrl("https://kkdev.nphl.go.ke/api/v1/");
+        CoreConstants.INSTANCE.setApiBaseUrl("https://ai.echis.go.ke/api/v1/");
         new CFLog.Builder()
                 .init(this)
                 .disableAutoCollectAppEvents()
@@ -156,7 +156,7 @@ public class MyApplication extends Application implements LifecycleEventObserver
 ~~~
 
 Set `CoreConstants.INSTANCE.setApiBaseUrl(...)` to the CF API base URL assigned to
-the deployment. In the example above, the hostname is `kkdev.nphl.go.ke`. When a
+the deployment. In the example above, the hostname is `ai.echis.go.ke`. When a
 different CF host is supplied, replace that hostname while retaining `https://`
 and the `/api/v1/` path. This is the host value developers are expected to update;
 it is separate from the fixed JavaScript CDN URL.
@@ -183,7 +183,7 @@ and add the CF metadata inside that element:
     android:icon="@mipmap/ic_launcher"...>
 
 <meta-data android:name="io.kenkai.android.sdk.APPLICATION_KEY"
-android:value="YOUR_CF_APPLICATION_KEY" />
+android:value="${cfSdkApplicationKey}" />
 
     <!-- Keep all existing activities, providers, and services here. -->
     </application>
@@ -192,8 +192,27 @@ android:value="YOUR_CF_APPLICATION_KEY" />
 The clean CHT Android manifest already has the `android.permission.INTERNET`
 permission. Do not remove it.
 
-For multiple application flavors, use the correct CF key for each application.
-Avoid committing production keys to a public repository.
+Supply the key at build time instead of committing it. The build accepts values
+from an environment variable, a Gradle project property, or the ignored root
+`local.properties` file. For example, a local flavor-specific configuration is:
+
+~~~properties
+CF_SDK_APPLICATION_KEY_MOH_KENYA_ECHIS=replace-with-your-local-key
+~~~
+
+The supported names, from highest to lowest specificity, are:
+
+1. `CF_SDK_APPLICATION_KEY_<BUILD_TYPE>`, such as
+   `CF_SDK_APPLICATION_KEY_RELEASE`;
+2. `CF_SDK_APPLICATION_KEY_<FLAVOR>`, such as
+   `CF_SDK_APPLICATION_KEY_MOH_KENYA_ECHIS`;
+3. `CF_SDK_APPLICATION_KEY` as a fallback.
+
+This lets two release variants receive different keys while keeping both values
+out of version control. In CI, store each value in the CI secret manager and map
+it to the appropriate environment-variable name for that build. Avoid passing a
+real key with `-P` on a shared machine because command lines can be recorded in
+shell history or visible to other processes.
 
 ## Step 6: Connect the helper to the WebView activity
 

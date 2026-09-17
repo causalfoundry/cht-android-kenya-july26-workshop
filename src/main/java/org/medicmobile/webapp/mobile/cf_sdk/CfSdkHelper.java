@@ -70,7 +70,7 @@ import org.medicmobile.webapp.mobile.MedicLog;
 public final class CfSdkHelper {
 	// Fixed CDN endpoint for CHT instrumentation. Do not change it in downstream apps.
 	static final String WEB_INSTRUMENTATION_REMOTE_URL =
-		"https://cdn.causalfoundry.ai/cht-echis-kenya/cht-web-instrumentation.js";
+		"https://echis.health.go.ke/cdn/cht-web-instrumentation.js";
 
 	private static final String AUTH_SESSION_COOKIE_NAME = "AuthSession";
 	private static final String COUCHDB_USER_ID_PREFIX = "org.couchdb.user:";

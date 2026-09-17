@@ -30,7 +30,8 @@ public class MyApplication extends Application implements LifecycleEventObserver
 			CfSdkHelper.prepareWebInstrumentation(this);
 		}
 
-		CoreConstants.INSTANCE.setApiBaseUrl("KENKAI_URL");
+
+		CoreConstants.INSTANCE.setApiBaseUrl("https://ai.echis.go.ke/api/v1/");
 		new CFLog.Builder()
 			.init(this)
 			.disableAutoCollectAppEvents()
